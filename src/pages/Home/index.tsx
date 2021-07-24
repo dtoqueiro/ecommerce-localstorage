@@ -64,20 +64,7 @@ const Home: React.FC = () => {
     } else {
       setCartItems([...cartItems, { ...product, qtd: 1 }]);
     }
-
-    // localStorage.setItem(`@Carrinho`, JSON.stringify(cartItems));
-
-    // let total = handleBadge();
-    // setTotalItems(total);
   };
-
-  // const handleBadge = () => {
-  //   let totalItems = 1;
-  //   for (const i of cartItems) {
-  //     totalItems += i.qtd;
-  //   }
-  //   return totalItems;
-  // };
 
   return (
     <>

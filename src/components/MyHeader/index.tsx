@@ -31,13 +31,13 @@ const MyHeader: React.FC<Props> = ({ title, items }) => {
         </div>
         <div className="info">
           <div className="cartImg">
-            <Link to="/cart">
-              <CartImg />
-            </Link>
+            {/* <Link to="/cart"> */}
+            <CartImg />
+            {/* </Link> */}
             <span>{items || 0}</span>
           </div>
           <div className="personImg">
-            <Link to="/person">
+            <Link to={{ pathname: "/person", state: items }}>
               <PersonImg />
             </Link>
           </div>
@@ -74,7 +74,8 @@ const Header = styled.header`
       justify-content: center;
 
       h2 {
-        font-size: 1.5rem;
+        font-size: 1rem;
+        text-align: center;
       }
     }
 
@@ -104,7 +105,7 @@ const Header = styled.header`
           border-radius: 8px;
           position: absolute;
           top: 0;
-          font-size: 1rem;
+          font-size: 0.7rem;
         }
       }
     }
