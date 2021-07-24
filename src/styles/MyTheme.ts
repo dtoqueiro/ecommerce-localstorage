@@ -5,12 +5,12 @@ const myTheme: DefaultTheme = {
   dropShadow: "2px 4px 4px rgba(0, 0, 0, 0.25)",
 
   colors: {
-    primary: "#BEE1E6",
-    secondary: "#BEC9E4",
+    primary: "#1d3557",
+    secondary: "#457b9d",
     success: "#28A745",
     danger: "#DC3545",
     info: "#17A2B8",
-    background: "#C9D5E0",
+    background: "#dcdcdc",
     light: "#F0EFEB",
   },
 };

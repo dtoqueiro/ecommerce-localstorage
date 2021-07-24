@@ -1,19 +1,31 @@
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { Container } from "./style";
-import { Navbar } from "../../components/Navbar/Navbar";
+import MyHeader from "../../components/MyHeader";
 import api from "../../services/api";
 
-interface Products {
+interface ProductsApi {
   id: number;
   title: string;
   price: number;
-  description: string;
-  category: string;
   image: string;
 }
+interface CartProducts {
+  id: number;
+  title: string;
+  price: number;
+  image: string;
+  qtd: number;
+}
+
+toast.configure();
 
 const Home: React.FC = () => {
-  const [data, setData] = useState<Products[]>([]);
+  const [data, setData] = useState<ProductsApi[]>([]);
+  const [cartItems, setCartItems] = useState<CartProducts[]>([]);
+  const [totalItems, setTotalItems] = useState<number>(0);
 
   useEffect(() => {
     api.get("").then((response) => {
@@ -21,17 +33,80 @@ const Home: React.FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem(`@Carrinho`, JSON.stringify(cartItems));
+    const handleBadge = () => {
+      let totalItems = 0;
+      for (const i of cartItems) {
+        totalItems += i.qtd;
+      }
+      return totalItems;
+    };
+    let total = handleBadge();
+    setTotalItems(total);
+  }, [totalItems, cartItems]);
+
+  const handleCart = (index: number) => {
+    let product = data[index];
+    toast.dark(`${product.title} adicionado ao carrinho`, {
+      position: toast.POSITION.BOTTOM_RIGHT,
+      autoClose: 3000,
+    });
+
+    const exist = cartItems.find((item) => item.id === product.id);
+
+    if (exist) {
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id ? { ...exist, qtd: exist.qtd + 1 } : item
+        )
+      );
+    } else {
+      setCartItems([...cartItems, { ...product, qtd: 1 }]);
+    }
+
+    // localStorage.setItem(`@Carrinho`, JSON.stringify(cartItems));
+
+    // let total = handleBadge();
+    // setTotalItems(total);
+  };
+
+  // const handleBadge = () => {
+  //   let totalItems = 1;
+  //   for (const i of cartItems) {
+  //     totalItems += i.qtd;
+  //   }
+  //   return totalItems;
+  // };
+
   return (
     <>
-      <Navbar title="Title">Teste</Navbar>
+      <MyHeader title="Produtos" items={totalItems} />
       <Container>
-        <section>
-          {data.map((prod) => (
-            <div className="product-content" key={prod.id}>
-              <p>{prod.title}</p>
-              <img src={prod.image} alt="Pro" />
-              <span>{prod.description}</span>
-              <h6>{prod.price}</h6>
+        <ToastContainer />
+        <section className="cardsContainer">
+          {data.map((prod, index) => (
+            <div className="card" key={prod.id}>
+              <div className="imgBox">
+                <img src={prod.image} alt="Pro" />
+              </div>
+              <div className="content">
+                <div className="productName">
+                  <h3>{prod.title}</h3>
+                </div>
+                <div className="price">
+                  <h2>
+                    {prod.price.toLocaleString("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                      minimumSignificantDigits: 2,
+                    })}
+                  </h2>
+                  <div className="shopBtn">
+                    <button onClick={() => handleCart(index)}>Comprar</button>
+                  </div>
+                </div>
+              </div>
             </div>
           ))}
         </section>
